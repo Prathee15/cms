@@ -36,7 +36,8 @@ public class CaseDetails
     private String caseCategory;
     private String legalInvolvement;
     private String referralSource;
-    private boolean caseWorkerAssigned = false;
+    @Column(columnDefinition = "boolean default false",name = "case_worker_assigned")
+    private boolean caseWorkerAssigned;
 
     private LocalDateTime dateOpened;
     private LocalDateTime dateClosed;
