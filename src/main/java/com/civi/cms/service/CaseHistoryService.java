@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -19,10 +20,12 @@ public class CaseHistoryService {
     CaseDetailService service;
 
     public ResponseEntity<?> addCaseHistory(CaseHistory history){
+
         if(history!=null && history.getCaseDetails()!=null &&
                 history.getCaseDetails().getCaseId()!=null){
             ResponseEntity<?> c1=service.getCaseById(history.getCaseDetails().getCaseId());
             if(c1!=null){
+                history.setReportDate(LocalDateTime.now());
                 Map<String, Object> responseData = (Map<String, Object>) c1.getBody();
                 history.setCaseDetails(responseData.get("caseDetails")!=null?
                         (CaseDetails)responseData.get("caseDetails"):null);

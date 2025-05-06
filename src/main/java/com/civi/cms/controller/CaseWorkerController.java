@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/case-worker")
 public class CaseWorkerController {
 
     @Autowired
     private CaseWorkerService caseWorkerService;
 
     // Create a new case worker
-    @PostMapping("/create-caseworker")
+    @PostMapping("/create")
     public ResponseEntity<?> createCaseWorker(@RequestBody CaseWorker caseWorker) {
         return caseWorkerService.createCaseWorker(caseWorker);
     }
@@ -27,36 +28,36 @@ public class CaseWorkerController {
 
 
     // Get all case workers
-    @GetMapping("/get-caseworkers")
+    @GetMapping("/retrieve-all")
     public ResponseEntity<List<CaseWorker>> getAllCaseWorkers() {
         return (caseWorkerService.getAllActiveCaseWorkers());
     }
 
     // Get all case workers
-    @GetMapping("/get-deactivated-caseworkers")
+    @GetMapping("/deactivated-caseworkers")
     public ResponseEntity<List<CaseWorker>> getDeactivatedCaseWorkers() {
         return (caseWorkerService.getAllDeactivatedCaseWorkers());
     }
 
 
-    @GetMapping("/get-caseworker/id/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getCaseWorkerById(@PathVariable Long id) {
         return (caseWorkerService.getCaseWorkerById(id));
     }
 
     // Update a case worker
-    @PutMapping("/update-caseworker")
+    @PutMapping("/update")
     public ResponseEntity<?> updateCaseWorker(@RequestBody CaseWorker updatedCaseWorker) {
         return (caseWorkerService.updateCaseWorker(updatedCaseWorker));
     }
 
     // Delete a case worker
-    @DeleteMapping("/delete-caseworker/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCaseWorker(@PathVariable Long id) {
         return caseWorkerService.softDeleteCaseWorker(id);
     }
 
-    @GetMapping("/cases-caseworker/{id}")
+    @GetMapping("/assigned-cases/{email}")
     public ResponseEntity<?> getCaseByCaseWorker(@PathVariable String email) {
         return caseWorkerService.getCaseByCaseWorker(email);
     }

@@ -85,8 +85,8 @@ public class CaseDetailService
 
     public CaseDetails updateCase(CaseDetails caseDetailsObj)
     {
-        return
-        caseDetailRepository.save(caseDetailsObj);
+        caseDetailsObj.setUpdatedAt(LocalDateTime.now());
+        return caseDetailRepository.save(caseDetailsObj);
     }
 
 
