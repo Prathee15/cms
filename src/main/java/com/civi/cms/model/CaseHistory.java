@@ -12,6 +12,16 @@ public class CaseHistory
     private long progressId;
     private String progressReport;
 
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public CaseDetails getCaseDetails() {
         return caseDetails;
     }
@@ -34,14 +44,6 @@ public class CaseHistory
     public void setProgressId(long progressId) {
         this.progressId = progressId;
     }
-
-    //public long getCaseId() {
-        //return caseId;
-    //}
-
-    //public void setCaseId(long caseId) {
-      //  this.caseId = caseId;
-    //}
 
     public String getProgressReport() {
         return progressReport;
