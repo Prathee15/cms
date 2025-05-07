@@ -5,6 +5,7 @@ import com.civi.cms.model.CaseAttachment;
 import com.civi.cms.model.CaseAttachmentDTO;
 import com.civi.cms.model.CaseDetails;
 import com.civi.cms.repository.CaseAttachmentRepository;
+import com.civi.cms.repository.CaseDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +23,25 @@ public class CaseAttachmentService
    @Autowired
    private  CaseAttachmentRepository caseAttachmentRepository;
 
+   @Autowired
+    CaseDetailRepository  caseDetailRepository;
+
     public ResponseEntity<?> createCaseAttachment(Long caseId, MultipartFile file)
     {
         CaseAttachment caseAttachment = new CaseAttachment();
         try {
+            Optional<CaseDetails> optionalCaseDetails = caseDetailRepository.findById(caseId);
+            if (optionalCaseDetails.isEmpty())
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Case not found");
             CaseDetails details = new CaseDetails();
             details.setCaseId(caseId);
             caseAttachment.setCaseDetails(details);
             caseAttachment.setFileName(file.getOriginalFilename());
             caseAttachment.setFileType(file.getContentType());
             caseAttachment.setFileData(file.getBytes());
+            caseAttachmentRepository.save(caseAttachment);
+            //details.setAttachmentCount(details.getAttachmentCount()+1);
+            //caseDetailRepository.save(details);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
