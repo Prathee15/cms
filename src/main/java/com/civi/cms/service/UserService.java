@@ -1,7 +1,11 @@
 package com.civi.cms.service;
 
+import com.civi.cms.model.AdminUser;
+import com.civi.cms.model.CaseWorker;
 import com.civi.cms.model.PasswordResetToken;
 import com.civi.cms.model.UserLogin;
+import com.civi.cms.repository.AdminRepository;
+import com.civi.cms.repository.CaseWorkerRepository;
 import com.civi.cms.repository.PasswordResetTokenRepository;
 import com.civi.cms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,12 @@ public class UserService
 
     UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    CaseWorkerRepository caseWorkerRepository;
+
+    @Autowired
+    AdminRepository adminRepository;
 
     @Autowired
     EmailService  emailService;
@@ -71,6 +81,21 @@ public class UserService
 
         }
         user.setPassword(null); // Remove password from response
+        String name="";
+        if(user.getRole() == UserLogin.Role.ADMIN)
+        {
+            Optional<AdminUser> adminUser = adminRepository.findById(user.getEmail());
+            if (adminUser.isPresent()) {
+                name = adminUser.get().getFirstName();
+            }
+
+        } else if (user.getRole() == UserLogin.Role.CASEWORKER) {
+            Optional<CaseWorker> caseWorker = caseWorkerRepository.findByEmail(user.getEmail());
+            if (caseWorker.isPresent()) {
+                name = caseWorker.get().getFirstName();
+            }
+        }
+        user.setFirstName(name);
         return ResponseEntity.ok(user);
     }
 

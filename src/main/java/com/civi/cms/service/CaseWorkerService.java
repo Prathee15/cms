@@ -3,6 +3,7 @@ import com.civi.cms.model.*;
 import com.civi.cms.repository.CaseDetailRepository;
 import com.civi.cms.repository.CaseWorkerAssignmentRepository;
 import com.civi.cms.repository.CaseWorkerRepository;
+import com.civi.cms.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class CaseWorkerService {
 
             CaseWorker savedCaseWorker = caseWorkerRepository.save(caseWorker);
             // Step 1: Generate random password
-            String password = generateRandomPassword(8); // customize length as needed
+            String password = Utility.generateRandomPassword(8); // customize length as needed
             // Step 2: Save login info
             UserLogin login = new UserLogin();
             login.setEmail(savedCaseWorker.getEmail());
@@ -63,26 +64,7 @@ public class CaseWorkerService {
 
             // Step 3: Send email
             String subject = "Welcome to the Case Management Portal";
-
-            String body = "<html>" +
-                    "<body style='font-family: Arial, sans-serif; color: #333;'>"
-                    + "<h2 style='color: #2E86C1;'>Welcome to the Case Management Portal!</h2>" +
-                    "<p>Dear <strong>" + savedCaseWorker.getFirstName() + "</strong>,</p>" +
-                    "<p>We're excited to have you onboard. Your account has been successfully created.</p>" +
-                    "<p><strong>Here are your login details:</strong></p>" +
-                    "<table style='border: 1px solid #ccc; padding: 10px; border-collapse: collapse;'>"
-                    + "<tr><td style='padding: 8px;'><strong>Email</strong></td><td style='padding: 8px;'>" + savedCaseWorker.getEmail() + "</td></tr>"
-                    + "<tr><td style='padding: 8px;'><strong>Password</strong></td><td style='padding: 8px;'>" + password + "</td></tr>"
-                    + "</table>" +
-                    "<p style='margin-top: 20px;'>For security reasons, please <strong>change your password</strong> after logging in for the first time.</p>" +
-                    "<p>If you have any questions or need help, feel free to contact our support team.</p>" +
-                    "<br>" +
-                    "<p>Best regards,</p>" +
-                    "<p><strong>Case Management Team</strong></p>" +
-                    "</body>" +
-                    "</html>";
-
-
+            String body = Utility.getWelcomeEmailBoday(savedCaseWorker.getFirstName(),savedCaseWorker.getEmail(), password);
             emailService.sendEmail(savedCaseWorker.getEmail(), subject, body);
 
             return new ResponseEntity<>(savedCaseWorker, HttpStatus.CREATED);
@@ -92,15 +74,6 @@ public class CaseWorkerService {
         }
     }
 
-    private String generateRandomPassword(int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 
     // Get all active (non-deleted) case workers
     public ResponseEntity<List<CaseWorker>> getAllActiveCaseWorkers() {
