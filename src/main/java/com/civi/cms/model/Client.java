@@ -20,6 +20,10 @@ public class Client
     private String gender;
     private String email;
     private String phoneNumber;
+    private String address;
+    private String govIdType;
+    private String govIdNumber;
+
     @OneToMany(mappedBy = "clientDetails", cascade = CascadeType.ALL)
     @JsonIgnore // Prevent infinite recursion during JSON serialization
     private List<CaseDetails> caseDetailsList;
