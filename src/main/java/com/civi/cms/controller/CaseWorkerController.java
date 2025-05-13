@@ -23,7 +23,12 @@ public class CaseWorkerController {
 
     @PostMapping("/assign-caseworker/caseid/{caseid}/worker/{workerid}")
     public ResponseEntity<?> createCaseWorker(@PathVariable Long caseid, @PathVariable Integer workerid) {
-        return caseWorkerService.assignCaseWorkerToCase(caseid, workerid);
+        return caseWorkerService.assignCaseWorkerToCase(caseid, workerid,false);
+    }
+
+    @PostMapping("/re-assign-caseworker/caseid/{caseid}/worker/{workerid}")
+    public ResponseEntity<?> reAssignCaseWorker(@PathVariable Long caseid, @PathVariable Integer workerid) {
+        return caseWorkerService.assignCaseWorkerToCase(caseid, workerid,true);
     }
 
 

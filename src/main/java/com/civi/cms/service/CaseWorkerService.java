@@ -152,7 +152,7 @@ public class CaseWorkerService {
     }
 
 
-public ResponseEntity<?> assignCaseWorkerToCase(Long caseId, int workerId) {
+public ResponseEntity<?> assignCaseWorkerToCase(Long caseId, int workerId,boolean reassign) {
     Optional<CaseDetails> existingCase = caseDetailsRepository.findById(caseId);
     Optional<CaseWorker> existingCaseWorker = caseWorkerRepository.findById(workerId);
 
@@ -162,7 +162,7 @@ public ResponseEntity<?> assignCaseWorkerToCase(Long caseId, int workerId) {
 
         // Check if this assignment already exists to prevent duplicates
         boolean alreadyAssigned = caseWorkerAssignmentRepository.existsByCaseDetailsAndCaseWorker(caseDetails, caseWorker);
-        if (alreadyAssigned) {
+        if (!reassign && alreadyAssigned) {
             return ResponseEntity.ok("Case worker already assigned to this case.");
         }
 
