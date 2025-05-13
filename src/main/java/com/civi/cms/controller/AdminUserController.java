@@ -34,7 +34,7 @@ public class AdminUserController {
     }
 
     // UPDATE Admin User
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{email}")
     public ResponseEntity<?> updateAdminUser(@PathVariable String email, @RequestBody AdminUser updatedUser) {
         return adminUserService.AdminUser(email, updatedUser);
     }
