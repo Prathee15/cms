@@ -202,7 +202,9 @@ public class UserService
         return ResponseEntity.ok("Password changed successfully.");
     }
 
-
+    public boolean isEmailExists(String email) {
+        return userRepository.existsById(email.toLowerCase());
+    }
 }
 
 

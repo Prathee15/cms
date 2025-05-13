@@ -32,7 +32,7 @@ public class AdminUserService {
     public ResponseEntity<?> createAdminUser(AdminUser user) {
 
         Optional<AdminUser> existingByEmail = adminUserRepository.findById(user.getEmail().toLowerCase());
-        if (existingByEmail.isPresent()) {
+        if(userService.isEmailExists(user.getEmail())||existingByEmail.isPresent()){
             return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
         }
 
@@ -43,6 +43,7 @@ public class AdminUserService {
         AdminUser adminUser = adminUserRepository.save(user);
 
         // Step 2: Save login info
+
         UserLogin login = new UserLogin();
         String password = Utility.generateRandomPassword(8);
         login.setEmail(adminUser.getEmail());
