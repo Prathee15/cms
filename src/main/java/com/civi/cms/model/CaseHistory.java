@@ -10,6 +10,7 @@ public class CaseHistory
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long progressId;
+    @Column(columnDefinition = "TEXT")
     private String progressReport;
 
     private String title;

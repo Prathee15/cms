@@ -25,6 +25,7 @@ public class CaseDetails
     private Long caseId;
 
     private String caseTitle;
+    @Column(columnDefinition = "TEXT")
     private String caseDescription;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id") // foreign key column in CaseDetails table

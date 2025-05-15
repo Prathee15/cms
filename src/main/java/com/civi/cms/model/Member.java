@@ -8,7 +8,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int memberId;
+    private long memberId;
     private String name;
     private String mobileNumber;
     private String address;
@@ -26,11 +26,11 @@ public class Member {
         this.caseDetails = caseDetails;
     }
 
-    public int getMemberId() {
+    public long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(long memberId) {
         this.memberId = memberId;
     }
 

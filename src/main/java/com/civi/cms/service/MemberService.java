@@ -34,4 +34,12 @@ public class MemberService {
         }
         return ResponseEntity.badRequest().body("caseId is missing in the request.");
     }
+
+    public ResponseEntity<?> removeMember(long id) {
+        if(repository.findById(id).isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.ok("member deleted");
+    }
 }
