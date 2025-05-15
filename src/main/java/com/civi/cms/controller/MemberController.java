@@ -18,7 +18,7 @@ public class MemberController {
         return service.addMember(m);
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeMember(@PathVariable long id ){
         return service.removeMember(id);
     }
