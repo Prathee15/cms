@@ -51,14 +51,8 @@ public class ClientService {
     public ResponseEntity<?> updateClient(Long id, Client clientDetails) {
         Optional<Client> existingClientOpt = clientRepository.findById(id);
         if (existingClientOpt.isPresent()) {
-            Client existingClient = existingClientOpt.get();
-            existingClient.setFirstName(clientDetails.getFirstName());
-            existingClient.setEmail(clientDetails.getEmail());
-            existingClient.setLastName(clientDetails.getLastName());
-            existingClient.setPhoneNumber(clientDetails.getPhoneNumber());
-            // Add other field updates as necessary
-
-            Client updatedClient = clientRepository.save(existingClient);
+            clientDetails.setClientId(id);
+            Client updatedClient = clientRepository.save(clientDetails);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Client not found with id: " + id, HttpStatus.NOT_FOUND);
