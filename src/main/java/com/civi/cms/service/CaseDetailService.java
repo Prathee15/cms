@@ -135,4 +135,16 @@ public class CaseDetailService
         return new ResponseEntity<>(caseDetailRepository.findByCaseWorkerAssignedFalse(), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> closeCase(Long id) {
+        Optional<CaseDetails> caseOptional = caseDetailRepository.findById(id);
+        if (caseOptional.isPresent()) {
+            CaseDetails details= caseOptional.get();
+            details.setCaseStatus(CaseDetails.CaseStatus.CLOSED);
+            details.setDateClosed(LocalDateTime.now());
+            caseDetailRepository.save(details);
+            return ResponseEntity.ok("updated successfully");
+        } else {
+            return ResponseEntity.badRequest().body("invalid caseid");
+        }
+    }
 }

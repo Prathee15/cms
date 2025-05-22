@@ -87,4 +87,11 @@ public class CaseDetailController {
     public ResponseEntity<?> getUnAssignedCase() {
         return caseDetailService.getUnAssignedCase();
     }
+
+    @GetMapping("/close") //tested already in postman
+    public ResponseEntity<?> closeCase(@PathVariable  Long id) {
+        return caseDetailService.closeCase(id);
+    }
+
+
 }
