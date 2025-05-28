@@ -23,6 +23,7 @@ public class Client
     private String address;
     private String govIdType;
     private String govIdNumber;
+    private String emergencyPhoneNumber;
 
     @OneToMany(mappedBy = "clientDetails", cascade = CascadeType.ALL)
     @JsonIgnore // Prevent infinite recursion during JSON serialization
