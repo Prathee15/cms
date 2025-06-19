@@ -6,6 +6,7 @@ import com.civi.cms.service.CaseAttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ public class CaseAttachmentController
     private CaseAttachmentService caseAttachmentService;
 
     @PostMapping(value = "/uploadfile/{caseid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> createCaseAttachment(
             @PathVariable Long caseid,
             @RequestPart("file") MultipartFile file) {
@@ -27,18 +29,21 @@ public class CaseAttachmentController
     }
 
     @GetMapping("/attachments/{id}/download")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<CaseAttachment> getCaseById(@PathVariable Long id)
     {
         return caseAttachmentService.getCaseAttachmentById(id);
     }
 
     @DeleteMapping("/attachment/{id}")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteCaseAttachment(@PathVariable Long id)
     {
         return ResponseEntity.ok(caseAttachmentService.deleteCaseAttachment(id));
     }
 
     @GetMapping("/metadata/{caseid}")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<List<CaseAttachmentDTO>> getFileMetadata(@PathVariable Long caseid){
         return caseAttachmentService.getCaseAttachmentMetaDataByCaseId(caseid);
     }

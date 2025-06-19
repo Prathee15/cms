@@ -4,6 +4,7 @@ import com.civi.cms.model.Attachment;
 import com.civi.cms.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ public class AttachmentController {
     private AttachmentService attachmentService;
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<String> uploadAttachment(
             @RequestParam("file") MultipartFile file,
             @RequestParam("username") String username,
@@ -30,6 +32,7 @@ public class AttachmentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<Attachment> getAttachment(@PathVariable Long id) {
         return attachmentService.getAttachmentById(id)
                 .map(ResponseEntity::ok)
@@ -37,11 +40,13 @@ public class AttachmentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<List<Attachment>> getAllAttachments() {
         return ResponseEntity.ok(attachmentService.getAllAttachments());
     }
 
     @GetMapping("/download/{id}")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<byte[]> downloadAttachment(@PathVariable Long id) {
         return attachmentService.getAttachmentById(id)
                 .map(attachment -> {

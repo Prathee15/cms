@@ -5,6 +5,7 @@ import com.civi.cms.model.CaseHistory;
 import com.civi.cms.service.CaseDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class CaseDetailController {
 
     // Get all cases
     @GetMapping
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<List<CaseDetails>> getAllCases()
     {
         List<CaseDetails> caseDetails = caseDetailService.getAllCases();
@@ -28,12 +30,14 @@ public class CaseDetailController {
 
     // Get case by ID
     @GetMapping("/{id}") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getCaseById(@PathVariable Long id) {
         return caseDetailService.getCaseById(id);
 
     }
 
     @GetMapping("/analytics") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getCaseAnalytics() {
         return caseDetailService.getCaseAnalytics();
 
@@ -41,6 +45,7 @@ public class CaseDetailController {
 
     // Create a new case
     @PostMapping("/create") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<CaseDetails> createCase(@RequestBody CaseDetails caseDetailsObj) {
         CaseDetails createdCaseDetails = caseDetailService.createCase(caseDetailsObj);
         return ResponseEntity.ok(createdCaseDetails);
@@ -49,6 +54,7 @@ public class CaseDetailController {
 
     //updated put - for updating cases
     @PutMapping("/update") //already tested in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<CaseDetails> updateCase(@RequestBody CaseDetails caseDetailsObj)
     {
 
@@ -57,6 +63,7 @@ public class CaseDetailController {
     }
 
     @PutMapping("/updatecasehistory/{caseid}") //already tested in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> updateCase(@PathVariable Long caseid,@RequestBody CaseHistory caseHistory)
     {
          return caseDetailService.updateCaseHistory(caseid,caseHistory);
@@ -67,6 +74,7 @@ public class CaseDetailController {
 
     // Delete a case
     @DeleteMapping("/{id}") //tested in postman already, its working
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<Boolean> deleteCase(@PathVariable Long id)
     {
         return ResponseEntity.ok(caseDetailService.deleteCase(id));
@@ -74,21 +82,25 @@ public class CaseDetailController {
 
     //get all case with clientId
     @GetMapping("/clientId/{id}") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getCaseByClientId(@PathVariable Long id) {
         return caseDetailService.getCaseById(id);
     }
 
     @GetMapping("/status/{status}") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getCaseByStatus(@PathVariable CaseDetails.CaseStatus status) {
         return caseDetailService.getCaseByStatus(status);
     }
 
     @GetMapping("/un-assigned") //tested already in postman
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUnAssignedCase() {
         return caseDetailService.getUnAssignedCase();
     }
 
     @PutMapping("/close/{caseId}")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> closeCase(@PathVariable  Long caseId) {
         return caseDetailService.closeCase(caseId);
     }
