@@ -8,10 +8,16 @@ import com.civi.cms.repository.AdminRepository;
 import com.civi.cms.repository.CaseWorkerRepository;
 import com.civi.cms.repository.PasswordResetTokenRepository;
 import com.civi.cms.repository.UserRepository;
+import com.civi.cms.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,6 +45,15 @@ public class UserService
 
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -80,7 +95,7 @@ public class UserService
             }
 
         }
-        user.setPassword(null); // Remove password from response
+
         String name="";
         if(user.getRole() == UserLogin.Role.ADMIN)
         {
@@ -96,6 +111,14 @@ public class UserService
             }
         }
         user.setFirstName(name);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username.toLowerCase(), password)
+        );
+
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        final String jwt = jwtUtil.generateToken(userDetails);
+        user.setJwtToken(jwt);
+        user.setPassword(null); // Remove password from response
         return ResponseEntity.ok(user);
     }
 

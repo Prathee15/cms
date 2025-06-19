@@ -1,10 +1,17 @@
 package com.civi.cms.controller;
 
+import com.civi.cms.security.JwtUtil;
 import com.civi.cms.service.UserService;
 import com.civi.cms.model.UserLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,6 +21,8 @@ import java.util.Map;
 public class UserLoginController {
     @Autowired
     private UserService userService;
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> createUserLogin(@RequestBody UserLogin userLogin) {
@@ -28,6 +37,7 @@ public class UserLoginController {
     }
 
     @GetMapping("/all-user")
+    @PreAuthorize("hasRole('CASEWORKER') or hasRole('ADMIN')")
     public ResponseEntity<?> getAllUser() {
         try {
             return userService.getAllUser();

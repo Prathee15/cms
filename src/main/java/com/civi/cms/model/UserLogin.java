@@ -19,6 +19,8 @@ public class UserLogin
     private Role role;
     private boolean isLocked = false;
     private boolean isWorking=true;
+    @Transient
+    private String jwtToken;
 
     @Transient
     private String firstName;
