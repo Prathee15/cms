@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Configuration
 public class CorsConfig {
 
-    @Value("${cors.allowed.origins}")
+    @Value("${cors.allowed.origins}")      // property:  http://localhost:3000,https://cmsservice-…
     private String allowedOrigins;
 
     @Bean
@@ -20,14 +20,13 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                List<String> origins = Arrays.asList(allowedOrigins.split(","));
-
+                String[] origins = allowedOrigins.split(",");
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        //.allowedOrigins(origins.toArray(new String[0])) // Dynamic origins from properties
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed methods
-                        .allowedHeaders("*"); // Allow all headers
-                        //.allowCredentials(true); // Allow cookies
+                        .allowedOrigins(origins)      // use your property, not "*"
+                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+                        .allowedHeaders("*");
+                // .allowCredentials(true);   // enable only if you *need* cookies/Authorization header,
+                // then remove "*" and keep explicit origins
             }
         };
     }
